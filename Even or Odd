@@ -1,0 +1,11 @@
+# Öffne eine Datei, in die der generierte Code geschrieben wird
+with open("generated_code.py", "w") as file:
+    file.write("for i in range(1, 1001):\n")  # Die Hauptschleife für den generierten Code
+
+    for i in range(1, 10000000):
+        if i % 2 == 0:  # Wenn die Zahl gerade ist
+            file.write(f"    if i == {i}:\n")
+            file.write(f"        print('{i} is even.')\n")
+        else:  # Wenn die Zahl ungerade ist
+            file.write(f"    if i == {i}:\n")
+            file.write(f"        print('{i} is odd.')\n")
