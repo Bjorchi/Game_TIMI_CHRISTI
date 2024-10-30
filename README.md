@@ -38,3 +38,4 @@ exit_program:
     xor ebx, ebx              ; Rückgabewert 0
     int 0x80     
 
+//XD
