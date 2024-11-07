@@ -580,7 +580,7 @@ Transform:
   m_GameObject: {fileID: 1272962785}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.52, z: 0}
+  m_LocalPosition: {x: 0, y: -0.578, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -650,12 +650,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: -7177117242776691743, guid: f6127b6346ac3aa4f97903c089b2abcb, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.58, y: 0.43}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -669,14 +669,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1590087949}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.475, y: 0.459, z: 0}
+  m_LocalRotation: {x: 0, y: -0.028183352, z: 0, w: 0.9996028}
+  m_LocalPosition: {x: -1.539, y: 0.459, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1272962786}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -3.23, z: 0}
 --- !u!50 &1590087952
 Rigidbody2D:
   serializedVersion: 5
@@ -738,17 +738,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.18895173, y: -0.122262895}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 1.8125, y: 1.34375}
+    newSize: {x: 0.58, y: 0.43}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.3112144, y: 0.91552746}
   m_EdgeRadius: 0
 --- !u!114 &1590087954
 MonoBehaviour:
@@ -764,12 +764,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 1590087952}
   speed: 5
+  jumpHeight: 6
   jumpMaxCount: 2
+  DampingSpeed: 0.85
+  leftTimer: 0
+  rightTimer: 0
+  TimerEnd: 5
   groundCheck: {fileID: 1272962786}
   groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  PlayerTransform: {fileID: 1590087951}
 --- !u!1 &1958895594
 GameObject:
   m_ObjectHideFlags: 0
