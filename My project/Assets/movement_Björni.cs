@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class movement_Björni : MonoBehaviour
 {
     public Rigidbody2D rb;
     public int speed;
@@ -10,7 +10,7 @@ public class Movement : MonoBehaviour
 
     // Bodenprüfung:
     public Transform groundCheck;
-    public float groundCheckRadius = 0.2f; 
+    public float groundCheckRadius = 0.2f;
     public LayerMask groundLayer;
 
     void Update()
@@ -25,18 +25,18 @@ public class Movement : MonoBehaviour
         }
 
         // Doppelsprung: Leertaste zum Springen
-        if (Input.GetKeyDown("space") && jumpCounter < jumpMaxCount)
+        if (Input.GetKeyDown("up") && jumpCounter < jumpMaxCount)
         {
             Jump();
         }
 
         // Bewegung nach links und rechts mit "A" und "D"
-        if (Input.GetKey("d")) // rechts
+        if (Input.GetKey("right")) // rechts
         {
             rb.AddForce(new Vector2(speed, 0));
         }
 
-        if (Input.GetKey("a")) // links
+        if (Input.GetKey("left")) // links
         {
             rb.AddForce(new Vector2(-speed, 0));
         }
