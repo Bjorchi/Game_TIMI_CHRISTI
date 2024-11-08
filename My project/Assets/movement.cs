@@ -12,7 +12,6 @@ public class Movement : MonoBehaviour
 
     public int leftTimer = 0;
     public int rightTimer = 0;
-
     public int TimerEnd;
 
     // Bodenprüfung:
@@ -23,6 +22,11 @@ public class Movement : MonoBehaviour
     private bool facingRight = false;
     public Transform PlayerTransform;
 
+    public float maxJumpHoldTime = 0.5f; // maximale Dauer, um die Leertaste zu halten
+    private float jumpHoldTime = 0f;     // Zeit, wie lange die Taste gehalten wird
+    public float jumpHoldForce = 2f;     // zusätzliche Kraft für den anhaltenden Sprung
+    private bool isJumping = false;      // Variable, um festzustellen, ob der Spieler springt
+
     void Update()
     {
         // Bodenprüfung mit zusätzlicher Geschwindigkeitsüberprüfung
@@ -32,19 +36,31 @@ public class Movement : MonoBehaviour
         if (isGrounded)
         {
             jumpCounter = 0;
+            isJumping = false;
+            jumpHoldTime = 0f; // Haltezeit zurücksetzen, wenn Spieler Boden berührt
         }
 
-        // Doppelsprung: Leertaste zum Springen
         if (Input.GetKeyDown("space") && jumpCounter < jumpMaxCount)
         {
-            Jump();
+            StartJump(); 
         }
 
-        // Bewegung nach links und rechts mit "A" und "D"
+        // Fortsetzen des Sprungs, wenn die Leertaste gehalten wird und die maximale Haltezeit noch nicht erreicht ist
+        if (Input.GetKey("space") && isJumping && jumpHoldTime < maxJumpHoldTime)
+        {
+            HoldJump();
+        }
+
+        // Beenden des Sprungs, wenn die Leertaste losgelassen wird
+        if (Input.GetKeyUp("space"))
+        {
+            isJumping = false; 
+        }
+
         if (Input.GetKey("d")) // rechts
         {
             leftTimer = 0;
-            if(rightTimer < TimerEnd)
+            if (rightTimer < TimerEnd)
             {
                 rightTimer++;
             }
@@ -54,8 +70,7 @@ public class Movement : MonoBehaviour
                 PlayerTransform.rotation = Quaternion.Euler(0, -180, 0);
             }
             facingRight = true;
-            rb.linearVelocity = new Vector2(speed * rightTimer / TimerEnd, rb.linearVelocity.y); // Setzt die Geschwindigkeit in x-Richtung auf `speed`
-            //rb.AddForce(new Vector2(speed, rb.linearVelocity.y));
+            rb.linearVelocity = new Vector2(speed * rightTimer / TimerEnd, rb.linearVelocity.y);
         }
         else if (Input.GetKey("a")) // links
         {
@@ -69,27 +84,28 @@ public class Movement : MonoBehaviour
                 PlayerTransform.rotation = Quaternion.Euler(0, 0, 0);
             }
             facingRight = false;
-            rb.linearVelocity = new Vector2(-speed * leftTimer / TimerEnd, rb.linearVelocity.y); // Setzt die Geschwindigkeit in x-Richtung auf `-speed`
-            //rb.AddForce(new Vector2(-speed, rb.linearVelocity.y));
+            rb.linearVelocity = new Vector2(-speed * leftTimer / TimerEnd, rb.linearVelocity.y);
         }
         else
         {
             // Keine Eingabe: Bewegung stoppen
             rb.linearVelocity = new Vector2(rb.linearVelocity.x * DampingSpeed, rb.linearVelocity.y);
-
             leftTimer = rightTimer = 0;
         }
     }
 
-    private void Jump()
+    private void StartJump()
     {
-        // Geschwindigkeit in Y-Richtung zurücksetzen für konsistente Sprünge
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
-
-        // Kraft für den Sprung hinzufügen
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // Geschwindigkeit in Y-Richtung zurücksetzen
         rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Impulse);
+        jumpCounter++; // Zähler für Sprünge erhöhen
+        isJumping = true; // Setzt isJumping auf true, für doubleJump
+    }
 
-        // JumpCounter erhöhen
-        jumpCounter++;
+    // Methode, um den Sprung zu halten und eine höhere Sprunghöhe zu ermöglichen
+    private void HoldJump()
+    {
+        rb.AddForce(Vector2.up * jumpHoldForce, ForceMode2D.Force); // Zusätzliche Kraft während des Haltens
+        jumpHoldTime += Time.deltaTime; // Erhöht die Haltezeit, solange die Taste gehalten wird
     }
 }
