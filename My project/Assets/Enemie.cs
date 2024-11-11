@@ -5,15 +5,22 @@ using UnityEngine;
 public class Enemie : MonoBehaviour
 {
     public float speed = 3f;
-    public float rechts = 5f; // Beispielwert, du kannst ihn anpassen
-    public float links = -5f; // Beispielwert, du kannst ihn anpassen
     private Vector3 rotation;
+    public float groundCheckDistance = 1f; // Distanz zur Bodenerkennung
+    public LayerMask groundLayer;
+    private bool isTurning = false; // Flag, um mehrfaches Drehen zu verhindern
+
+    public BoxCollider2D boxCollider;
+    public Transform checkIsGrounded;
+    public float groundCheckRadius = 0.5f;   
+    public bool isGrounded;
+    public Transform PlayerTransform;
+    private int temp = 1;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rechts = transform.position.x + rechts;
-        links = transform.position.x - links;
         rotation = transform.eulerAngles;
     }
 
@@ -21,16 +28,27 @@ public class Enemie : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector3.left * speed * Time.deltaTime);
+        isGrounded = Physics2D.OverlapCircle(checkIsGrounded.position, groundCheckRadius, groundLayer);
+        // Wenn der Gegner den Boden verliert und nicht schon dreht
+        if (!isGrounded)
+        {
+            
+            // Drehen und Richtung ändern
+            //transform.eulerAngles = rotation - new Vector3(0, 180, 0);
+            //rotation = transform.eulerAngles;
+            if(speed < 0) {
+                PlayerTransform.rotation = Quaternion.Euler(0, 180, 0);
+            }
+            else PlayerTransform.rotation = Quaternion.Euler(0, 0, 0);
+            
 
-        if (transform.position.x < links)
-        {
-            transform.eulerAngles = rotation - new Vector3(0, 180, 0); // Drehen, um in die andere Richtung zu gehen
-            speed = -speed; // Richtung ändern
+            speed = -speed; // Geschwindigkeit umdrehen
+            
+            
         }
-        else if (transform.position.x > rechts)
-        {
-            transform.eulerAngles = rotation;
-            speed = -speed; // Richtung wieder ändern
-        }
+        
     }
+
+    // Methode zur Prüfung, ob das Objekt den Boden berührt
+    
 }
