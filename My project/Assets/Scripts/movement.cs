@@ -32,14 +32,14 @@ public class Movement : MonoBehaviour
     public Transform PlayerTransform;
 
     // Jump Charge Variablen
-    public float maxChargeTime = 1f;    // Maximale Aufladezeit für den Sprung
+    public float maxChargeTime = 1f;    // Max Aufladezeit 
     private float chargeTime = 0f;      // Aktuelle Aufladezeit
-    public float minJumpForce = 5f;     // Minimale Sprungkraft
-    public float maxJumpForce = 15f;    // Maximale Sprungkraft bei voller Aufladung
-    private bool isChargingJump = false;// Ob der Spieler gerade den Sprung auflädt
+    public float minJumpForce = 5f;     
+    public float maxJumpForce = 15f;    
+    private bool isChargingJump = false;
 
     public float groundedDelay = 0.1f; // Verzögerung in Sekunden
-    private float groundedTimer = 0f; // Timer für die Verzögerung
+    private float groundedTimer = 0f; // Timer für  Verzögerung
 
     void Update()
     {
@@ -51,23 +51,32 @@ public class Movement : MonoBehaviour
         {
             return;
         }
+
+        //player auf (x,y) setzten
+        if (Input.GetKey("r"))
+        {
+            transform.position = new Vector2(0f, 0f);
+        }
+
+
+        //DoubleJump time
         if (Input.GetKeyUp(KeyCode.Space) && jumpCounter == 1)
         {
             JumpSmall();
         }
-        // Aufladen des Sprungs, wenn die Leertaste gedrückt wird und die Sprunganzahl erlaubt ist
-        if (Input.GetKeyDown(KeyCode.Space) && jumpCounter == 0)
+        
+        //schaut ob leertaste gedrückt
+        if (Input.GetKeyDown(KeyCode.Space) && jumpCounter == 0)    
         {
             isChargingJump = true;
             chargeTime = 0f;
         }
 
-        // Erhöhe die Aufladung, solange die Leertaste gedrückt wird und die maximale Zeit noch nicht erreicht ist
+        // je länger spacebar desto höher jump
         if (Input.GetKey(KeyCode.Space) && isChargingJump && isGrounded)
         {
-            chargeTime += Time.deltaTime;
-            chargeTime = Mathf.Clamp(chargeTime, 0, maxChargeTime); // Begrenze die Aufladung auf die maximale Zeit
-            
+            chargeTime += Time.deltaTime;                                   // chargeTime wird pro frame
+            chargeTime = Mathf.Clamp(chargeTime, 0, maxChargeTime);         // Mathf.Clamp(Wert, Min, Max)
         }
 
         // Springen, wenn die Leertaste losgelassen wird
@@ -158,15 +167,15 @@ public class Movement : MonoBehaviour
     public void Jump()
     {
         print("jump");
-        float jumpForce = Mathf.Lerp(minJumpForce, maxJumpForce, chargeTime / maxChargeTime); // (1.Parameter, 2.Parameter, prozent von Aufladen)
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // Setzt die Y-Geschwindigkeit zurück, um den Sprung zu starten
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Wendet die berechnete Sprungkraft an
-        jumpCounter++; // Erhöht den Sprungzähler
+        float jumpForce = Mathf.Lerp(minJumpForce, maxJumpForce, chargeTime / maxChargeTime);   // (1.Parameter, 2.Parameter, prozent von Aufladen)
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);                                // y-Geschwindigkeit = 0
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);                               // Sprungkraft adden
+        jumpCounter++;                                                                          // Erhöht den Sprungzähler
     }
 
     public void JumpSmall()
     {
-        print("jumo small");
+        print("jump small");
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpHeight);
         jumpCounter++; // Erhöht den Sprungzähler
     }
