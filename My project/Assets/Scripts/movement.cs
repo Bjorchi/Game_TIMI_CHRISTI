@@ -7,7 +7,7 @@ public class Movement : MonoBehaviour
     public int speed;
     public int jumpHeight;
     public int jumpCounter = 0;
-    private bool isGrounded;
+    public bool isGrounded;
     public int jumpMaxCount = 2;
     public float DampingSpeed;
 
@@ -38,50 +38,51 @@ public class Movement : MonoBehaviour
     public float maxJumpForce = 15f;    // Maximale Sprungkraft bei voller Aufladung
     private bool isChargingJump = false;// Ob der Spieler gerade den Sprung auflädt
 
+    public float groundedDelay = 0.1f; // Verzögerung in Sekunden
+    private float groundedTimer = 0f; // Timer für die Verzögerung
+
     void Update()
     {
         // Bodenprüfung
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer) && Mathf.Abs(rb.linearVelocity.y) < 0.1f;
-
+        bool currentlyGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer)
+                                  && Mathf.Abs(rb.linearVelocity.y) < 0.1f;
         // Wenn der Spieler gerade dabei ist zu dashen, dann breche die Bewegung ab
         if (isDashing)
         {
             return;
         }
-
+        if (Input.GetKeyUp(KeyCode.Space) && jumpCounter == 1)
+        {
+            JumpSmall();
+        }
         // Aufladen des Sprungs, wenn die Leertaste gedrückt wird und die Sprunganzahl erlaubt ist
-        if (Input.GetKeyDown(KeyCode.Space) && jumpCounter < jumpMaxCount && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && jumpCounter == 0)
         {
             isChargingJump = true;
             chargeTime = 0f;
-            print("Leertaste wurde gedrückt");
-            print(jumpCounter);
         }
 
         // Erhöhe die Aufladung, solange die Leertaste gedrückt wird und die maximale Zeit noch nicht erreicht ist
-        if (Input.GetKey(KeyCode.Space) && isChargingJump)
+        if (Input.GetKey(KeyCode.Space) && isChargingJump && isGrounded)
         {
             chargeTime += Time.deltaTime;
             chargeTime = Mathf.Clamp(chargeTime, 0, maxChargeTime); // Begrenze die Aufladung auf die maximale Zeit
-            print("charged den Sprung :) ");
-            print(jumpCounter);
+            
         }
 
         // Springen, wenn die Leertaste losgelassen wird
         if (Input.GetKeyUp(KeyCode.Space) && isChargingJump)
         {
+            currentlyGrounded = false;
             Jump();
             isChargingJump = false;
-            print("Sprung erfolgreich ausgeführt");
         }
+        
 
         // Sprunganzahl zurücksetzen und Aufladezeit stoppen, wenn der Spieler den Boden berührt
-        if (isGrounded && !isChargingJump)
-        {
-            jumpCounter = 0;
-            isChargingJump = false;
-            chargeTime = 0f;
-        }
+
+
+
 
         // Dashing ausführen, wenn Shift gedrückt wird
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash) 
@@ -136,13 +137,37 @@ public class Movement : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x * DampingSpeed, rb.linearVelocity.y);
             leftTimer = rightTimer = 0;
         }
+
+        if (currentlyGrounded)
+        {
+            groundedTimer += Time.deltaTime;
+            if (groundedTimer >= groundedDelay && !isChargingJump)
+            {
+                jumpCounter = 0; // Reset only after delay
+            }
+            isGrounded = true;
+        }
+        else
+        {
+            groundedTimer = 0f;
+            isGrounded = false;
+        }
+
     }
 
     public void Jump()
     {
+        print("jump");
         float jumpForce = Mathf.Lerp(minJumpForce, maxJumpForce, chargeTime / maxChargeTime); // (1.Parameter, 2.Parameter, prozent von Aufladen)
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // Setzt die Y-Geschwindigkeit zurück, um den Sprung zu starten
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Wendet die berechnete Sprungkraft an
+        jumpCounter++; // Erhöht den Sprungzähler
+    }
+
+    public void JumpSmall()
+    {
+        print("jumo small");
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpHeight);
         jumpCounter++; // Erhöht den Sprungzähler
     }
 

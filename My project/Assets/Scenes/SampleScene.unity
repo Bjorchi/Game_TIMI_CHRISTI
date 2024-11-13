@@ -1427,6 +1427,7 @@ MonoBehaviour:
   speed: 6
   jumpHeight: 8
   jumpCounter: 0
+  isGrounded: 0
   jumpMaxCount: 2
   DampingSpeed: 0.1
   leftTimer: 0
@@ -1435,7 +1436,7 @@ MonoBehaviour:
   dashingPower: 24
   dashingTime: 0.2
   groundCheck: {fileID: 1272962786}
-  groundCheckRadius: 0.2
+  groundCheckRadius: 0.4
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -1444,6 +1445,7 @@ MonoBehaviour:
   maxChargeTime: 1
   minJumpForce: 5
   maxJumpForce: 15
+  groundedDelay: 0.01
 --- !u!96 &1590087955
 TrailRenderer:
   serializedVersion: 3
