@@ -55,7 +55,7 @@ public class Movement : MonoBehaviour
         //player auf (x,y) setzten
         if (Input.GetKey("r"))
         {
-            transform.position = new Vector2(0f, 0f);
+            transform.position = new Vector2(0f, -1.174541f);
         }
 
 
