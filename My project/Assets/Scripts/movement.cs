@@ -108,6 +108,7 @@ public class Movement : MonoBehaviour
                 rightTimer++;
             }
 
+
             if (!facingRight)
             {
                 PlayerTransform.rotation = Quaternion.Euler(0, -180, 0); // Drehung nach rechts
@@ -173,6 +174,8 @@ public class Movement : MonoBehaviour
         jumpCounter++;                                                                          // Erhöht den Sprungzähler
     }
 
+
+    // TODO: jump verbessern / smoother machen
     public void JumpSmall()
     {
         print("jump small");
